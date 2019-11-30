@@ -54,6 +54,75 @@ void fill_Q_matrix(void){
         } 
     }
 }
+//--------------------------------------------------------
+void split_str(const string& s, char c,
+           vector<string>& v) {
+   string::size_type i = 0;
+   string::size_type j = s.find(c);
+
+   while (j != string::npos) {
+      v.push_back(s.substr(i, j-i));
+      i = ++j;
+      j = s.find(c, j);
+
+      if (j == string::npos)
+         v.push_back(s.substr(i, s.length()));
+   }
+}
+//---------------------------------------------------------
+void save_learning(void){
+    ofstream myfile;
+    myfile.open("learning.txt");
+    if (myfile.is_open()){
+        for (int i = 0; i < qSize*qSize; i++){
+            for (int j = 0; j < 4; j++){
+                myfile << Q[i][j] << " ";
+            }        
+            myfile << "\n";
+        }
+        myfile.close();
+        cout << "Learning Saved" << endl;
+    }
+    else cout << "Unable to open file";
+    
+}
+  
+//---------------------------------------------------------
+void load_learning(void){
+    string line;
+    ifstream myfile;
+    myfile.open("learning.txt");
+    int temp;
+
+    if (myfile.is_open()){
+        for(int i = 0; i < qSize*qSize; i++){
+            getline(myfile, line);
+            vector<string> values;
+            cout << line << endl;
+            split_str(line, ' ', values);
+
+            
+            temp = atoi(values[0].c_str());
+            cout << temp << " ";
+            Q[i][0] = temp;
+            
+            temp = atoi(values[1].c_str());
+            cout << temp << " ";
+            Q[i][1] = temp;
+            
+            temp = atoi(values[2].c_str());
+            cout << temp << " ";
+            Q[i][2] = temp;
+            
+            temp = atoi(values[3].c_str());
+            cout << temp << endl;
+            Q[i][3] = temp;
+        }
+        myfile.close();
+        cout << "Learning Loaded" << endl;
+    }
+    else cout << "Unable to open file";
+}
 
 //---------------------------------------------------------
 void Q_learn_server(void) 
@@ -66,7 +135,7 @@ void Q_learn_server(void)
 
 double epsilon = eps;
  episode=1;
-    
+        
  do
   {
     do
@@ -120,14 +189,18 @@ double epsilon = eps;
             if(Q[initial_state][dice]<=0)Q[initial_state][dice]=Q[initial_state][dice]-2;
             initial_state=new_state;
             i=new_i;
-            j=new_j; 
+            j=new_j;
+            current_iteration = iteraciones;           
             iteraciones++;
-            if(iteraciones==200)break;  // end of episode
-    } while(1);
+            if(iteraciones==max_iteration_per_episode){
+                break;  // end of episode
+            }                
+            
+    } while(!kbhit() && !pause);
     episode++;
     print_Q();    
     //gets(dummy); 
- } while(episode<25);  //  aqui controlamos cuantos episodios queremos ejecutar para entrenar
+ } while(episode<max_episode && !kbhit() && !pause);  //  aqui controlamos cuantos episodios queremos ejecutar para entrenar
     //  for(i=0;i<qSize*qSize;i++)
     //  for(j=0;j<4;j++)  Q[i][j] = Q[i][j]/10;   // reduce el tama�o de entradas en Q
 } 

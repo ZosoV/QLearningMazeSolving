@@ -56,13 +56,34 @@ int maze[qSize][qSize] =
 #include <list> 
 #include <graphics.h>
 #include <math.h>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
+#include <vector> 
+#include <cstdlib>
+#include <string>
 
+using namespace std;
+        
 int Q[qSize*qSize][4];
 int currentState;   
-int episode;
+int episode = 1;
+int max_episode = 25;
+int current_iteration = 0;
+int max_iteration_per_episode = 200;
 char key;  
 char dummy[1];
 int draw_mode=1;
+//1: poner nuevas paredes
+//2: localizar objetivo
+//3: localizar inicio
+
+char str[1000];
+int sig = 5;
+
+bool pause = false;
 
 void plot_labyrinth(int i_player, int j_player)                           ////       PLOT HIDDEN WEIGHTS
 {
@@ -97,7 +118,43 @@ scale=20;
           //y++;  
          }
        //x++;  
-     } 
+     }
+
+    //Print Text
+    int text_x = 500, text_y = 200;
+    int x_step=275; 
+    int y_step=25;
+    
+    int x_text = text_x;
+    int y_text = text_y;
+        
+        setcolor(BLACK);
+        bar(x_text+x_step,y_text,x_text+x_step+90,y_text+100);
+        setcolor(BLUE);     
+        settextstyle(3, HORIZ_DIR, 1);
+        outtextxy(x_text,y_text,"Episodio Máximo: ");
+        x_text=x_text+x_step;
+        outtextxy(x_text,y_text,gcvt( max_episode,sig,str)); 
+    
+    x_text=text_x; 
+    y_text=y_text+y_step;
+    
+        outtextxy(x_text,y_text,"Episodios Trancurridos: ");
+        x_text=x_text+x_step;
+        outtextxy(x_text,y_text,gcvt( episode,sig,str)); 
+    
+    x_text=text_x; 
+    y_text=y_text+y_step;
+        outtextxy(x_text,y_text,"Iteracion por Episodio Maxima: ");
+        x_text=x_text+x_step;
+        outtextxy(x_text,y_text,gcvt( max_iteration_per_episode,sig,str));
+        
+    x_text=text_x; 
+    y_text=y_text+y_step;
+        outtextxy(x_text,y_text,"Iteraciones por Episodio: ");
+        x_text=x_text+x_step;
+        outtextxy(x_text,y_text,gcvt( current_iteration+1,sig,str)); 
+         
 }
 
 #include "structures_lib.h"
@@ -150,42 +207,71 @@ main()
     
 
     int prev_i, prev_j, i_p, j_p;
-    bool first_k = false, second_k = false;    
+    bool first_k = false, second_k = false;
+            
+    //First stage define the maze and add new walls
+    plot_labyrinth(i_player,j_player);
+    make_graph();
 
-    while(key!='1')
-    {       
-        plot_labyrinth(i_player,j_player);
-        make_graph();
-        delay(100);
-        key=getch();
-        if(kbhit()) break;
-    }
-    draw_mode=2;
-    print_R(i_player,j_player);
-    while(key!='2')
-    {       
-        plot_labyrinth(i_player,j_player);
-        make_graph();
-        delay(100);
-        key=getch();
-        if(kbhit()) break;
-    }
-    draw_mode=3;
-    while(key!='3')
-    {       
-        plot_labyrinth(i_player,j_player);
-        make_graph();
-        delay(100);
-        key=getch();
-        if(kbhit()) break;
-    }
-    fill_Q_matrix();
+    while(1){
+     
+       key=getch();
+       switch (key) {
+           case '1':{ //Cambio de modo a elegir la posicion del objetivo
+                draw_mode=2;
+                plot_labyrinth(i_player,j_player);
+                make_graph();
+                delay(100);
+                } 
+           break;
+           case '2':{ //Cambio de modo a elegir la posicion de inicio
+                draw_mode=3;
+                plot_labyrinth(i_player,j_player);
+                make_graph();
+                delay(100);
+                    } 
+           break;
+           case '3':{ //Inicio el entramiento
+                fill_Q_matrix();
+                Q_learn_server();
+                cout << "End training in episode "<< episode << endl; 
+                delay(100);
+                    } 
+           break;
+           case '4':{ //Cargo Aprendizaje
+                load_learning();
+                delay(100);
+                cout << "hasta aqui bien" << endl;
+                fill_Q_matrix();
+                Q_learn_server();
+                cout << "End training in episode "<< episode << endl; 
+                delay(100);
+                    } 
+           break;
+           case '5':{ //Guardo el aprendizaje
+                save_learning();
+                delay(100);
+                    } 
+           break;
+           case 'p':{ //Pauso y continuo
+               
+                key = getch();
+                
+                if (key == 'p'){
+                    fill_Q_matrix();
+                    Q_learn_server();
+                    cout << "End training in episode "<< episode << endl; 
+                    delay(100);
+                }
 
+                    } 
+           break;                      
+       }
+    }
     // print_Q();
         
     // Sleep(100);     
               
-    loop(); 
 
     closegraph();
     clrscr();
