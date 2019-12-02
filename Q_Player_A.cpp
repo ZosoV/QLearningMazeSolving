@@ -70,7 +70,7 @@ using namespace std;
 int Q[qSize*qSize][4];
 int currentState;   
 int episode = 1;
-int max_episode = 25;
+int max_episode = 1000;
 int current_iteration = 0;
 int max_iteration_per_episode = 200;
 char key;  
@@ -79,6 +79,8 @@ int draw_mode=1;
 //1: poner nuevas paredes
 //2: localizar objetivo
 //3: localizar inicio
+
+int learning_mode = 0; //1 para ejecutar sin graficas el entrenamiento
 
 char str[1000];
 int sig = 5;

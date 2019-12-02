@@ -163,7 +163,9 @@ double epsilon = eps;
                 }else{
                     dice=random(4);   //  se escioge el estado inicial
                 }
-                plot_labyrinth(i,j);
+                if(learning_mode == 0){
+                    plot_labyrinth(i,j);
+                }
                 new_i=i;
                 new_j=j;
                 temp=Q[initial_state][dice];
@@ -249,7 +251,8 @@ void Q_player_server(void)
         new_state = coor_to_state(new_i,new_j); 
         cout << "new i: " << i_player <<"new j: "<< j_player<< endl;  
         cout << "new state: "<< new_state <<endl; 
-        plot_labyrinth(i_player,j_player); 
+        plot_labyrinth(i_player,j_player);
+
         initial_state=new_state; 
         i_player=new_i; 
         j_player=new_j;
