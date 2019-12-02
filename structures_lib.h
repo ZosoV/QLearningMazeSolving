@@ -196,11 +196,11 @@ double epsilon = eps;
                 break;  // end of episode
             }                
             
-    } while(!kbhit() && !pause);
+    } while(!kbhit());
     episode++;
     print_Q();    
     //gets(dummy); 
- } while(episode<max_episode && !kbhit() && !pause);  //  aqui controlamos cuantos episodios queremos ejecutar para entrenar
+ } while((episode<max_episode && !kbhit()));  //  aqui controlamos cuantos episodios queremos ejecutar para entrenar
     //  for(i=0;i<qSize*qSize;i++)
     //  for(j=0;j<4;j++)  Q[i][j] = Q[i][j]/10;   // reduce el tama�o de entradas en Q
 } 
@@ -215,51 +215,59 @@ void showlist(list <int> g)
     cout << '\n'; 
 } 
 //-------------------------------------------------------------
-void Q_player_server(void) 
-{
- int i,j;     
- int max;
- int initial_state, next_state;  
- list<int> final_path;
- 
-    //initial_state=random(qSize);
-    //initial_state = 2; 
-    cout << "Insert the initial state = " <<endl; 
-    cin >> initial_state;
-    next_state = initial_state;
-    
-    system("cls");     
-    cout << "search begins at = "<< initial_state <<endl; 
-    final_path.push_back(next_state);
+//------------------------------------------------------------- 
+void Q_player_server(void)  
+{ 
+ int new_i,new_j; 
+ int iter;      
+ int dice, max;
+ int initial_state, new_state;  
+     
+ //do 
+  //{ 
+    //initial_state=random(qSize*qSize);   //  se escioge el estado inicial 
+    //state_to_coor(initial_state,&i,&j); 
+    //make_graph();          // estado fijo, buscamos columna diferente de -1 
+    initial_state = coor_to_state(i_player,j_player); 
+    cout << "The initial point is: new i: " << i_player <<"new j: "<< j_player<< endl;    
+    do     
+    {      
+        dice=0; 
+        max=Q[initial_state][dice]; 
+        for(iter=1;iter<4;iter++){ 
+            if(Q[initial_state][iter]>max){ 
+                dice = iter; 
+                max = Q[initial_state][dice];  
+            }                  // buscamos el valor mas alto de valores Q   
+        } 
+        new_i=i_player; 
+        new_j=j_player; 
+        if(dice==0)new_i--; 
+        else if(dice==1)new_j++; 
+        else if(dice==2)new_i++; 
+        else new_j--;                
+        new_state = coor_to_state(new_i,new_j); 
+        cout << "new i: " << i_player <<"new j: "<< j_player<< endl;  
+        cout << "new state: "<< new_state <<endl; 
+        plot_labyrinth(i_player,j_player); 
+        initial_state=new_state; 
+        i_player=new_i; 
+        j_player=new_j;
 
-    print_Q();
-    do
-       {   
-            max=Q[next_state][0];  // valor en columna 0
-            j=0;
-            for(i=1;i<qSize;i++)
-            {
-             if(Q[next_state][i]>max)
-                   {
-                       max = Q[next_state][i];      // buscamos el valor mas alto de valores Q
-                       j=i;
-                   }           
+        if(kbhit()){
+            int key = getch();
+            if(key == '6'){
+                break;
             }
-           
-            cout << "The max found Q guide is = "<< max <<" in column "<< j <<endl;  
-               
-            next_state = j;
-  
-            //gets(dummy);
-            
-            final_path.push_back(next_state);
-            
-      if(next_state==8)break;  // end of search
-    } while(1);
-    
-    cout << "\n The final path is: "; 
-    showlist(final_path);     
-    episode++;    
-    //gets(dummy); 
-} 
+        } 
+ 
+        // if((i_player==win_i && j_player==win_j))break;  // end of episode 
+    } while(!kbhit() || (i_player!=win_i && j_player!=win_j)); 
+    //episode++;  
+    //gets(dummy);  
+ //} while(episode<50);  //  aqui controlamos cuantos episodios queremos ejecutar para entrenar 
+    //  for(i=0;i<qSize*qSize;i++) 
+    //  for(j=0;j<4;j++)  Q[i][j] = Q[i][j]/10;   // reduce el tama?o de entradas en Q 
+}
+ 
 //-------------------------------------------------------------

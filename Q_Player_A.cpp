@@ -253,7 +253,13 @@ main()
                 delay(100);
                     } 
            break;
-           case 'p':{ //Pauso y continuo
+           case '6':{ //Permite mover al agente con el aprendizaje establecido
+                Q_player_server();
+                delay(100);
+                } 
+           break;           
+                    
+           case 'p':{ //Detiene el etrenamiento y continuo
                
                 key = getch();
                 
