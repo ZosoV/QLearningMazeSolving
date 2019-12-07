@@ -1,4 +1,11 @@
 
+// --------------------------
+//Maze Solving
+//Joseph Gonzalez
+//Oscar Guarnizo 
+//Andres Banda
+//Fabricio Crespo
+//Yachay Tech
 //-------------------------------------
 //    inicia el modo grafico             
 //-------------------------------------    
