@@ -1,12 +1,14 @@
 // --------------------------
-//Practica 6
-// Q learner 
-// Prof Oscar Chang
-//  October 3, 2019
+//Maze Solving
+//Joseph Gonzalez
+//Oscar Guarnizo 
+//Andres Banda
+//Fabricio Crespo
+//Yachay Tech
 //--------------------------//        GLOBALS   -------------------
 const int qSize = 21;
 
-//Posición del objetivo final //Configurar antes de entrenar
+//PosiciÃ³n del objetivo final //Configurar antes de entrenar
 int win_i = 12;
 int win_j = 12;
 int i_player = 0;
@@ -14,7 +16,7 @@ int j_player = 0;
 const double gamma = 0.8;
 const double eps = 0.5;
 
-//Definimos el tamaño del laberinto
+//Definimos el tamaÃ±o del laberinto
 int maze[qSize][qSize] = 
         {    
             //0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 
@@ -137,7 +139,7 @@ scale=20;
         bar(x_text+x_step,y_text,x_text+x_step+90,y_text+100);
         setcolor(BLUE);     
         settextstyle(3, HORIZ_DIR, 1);
-        outtextxy(x_text,y_text,"Episodio Máximo: ");
+        outtextxy(x_text,y_text,"Episodio MÃ¡ximo: ");
         x_text=x_text+x_step;
         outtextxy(x_text,y_text,gcvt( max_episode,sig,str)); 
     
@@ -214,7 +216,7 @@ main()
     int prev_i, prev_j, i_p, j_p;
     bool first_k = false, second_k = false;
 
-    draw_mode=3; //Inicio todo configurado sin poder añadir paredes, ni configurar el objetivo
+    draw_mode=3; //Inicio todo configurado sin poder aÃ±adir paredes, ni configurar el objetivo
     if ( learning_mode == 0){
         //First stage define the maze and add new walls
         plot_labyrinth(i_player,j_player);
@@ -270,7 +272,7 @@ main()
                 } 
            break;
 
-           case '7':{ //Permite mover al agente con el aprendizaje de manera más lenta o rapida
+           case '7':{ //Permite mover al agente con el aprendizaje de manera mÃ¡s lenta o rapida
                   slow = (slow == 1) ? 0 : 1;
                 } 
            break;                           
