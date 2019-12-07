@@ -1,3 +1,10 @@
+// --------------------------
+//Maze Solving
+//Joseph Gonzalez
+//Oscar Guarnizo 
+//Andres Banda
+//Fabricio Crespo
+//Yachay Tech
 // #include "draw_maze.h" 
 //----------------------------------------------------------------------------------------------------     
 void print_Q(void)
