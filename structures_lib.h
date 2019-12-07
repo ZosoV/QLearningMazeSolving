@@ -194,7 +194,7 @@ double epsilon = eps;
             j=new_j;
             current_iteration = iteraciones;           
             iteraciones++;
-            if(iteraciones==max_iteration_per_episode){
+            if(iteraciones==max_iteration_per_episode || (i == win_i && j == win_j) ){
                 break;  // end of episode
             }                
             
@@ -252,7 +252,9 @@ void Q_player_server(void)
         cout << "new i: " << i_player <<"new j: "<< j_player<< endl;  
         cout << "new state: "<< new_state <<endl; 
         plot_labyrinth(i_player,j_player);
-
+        if(slow==1){
+            delay(500);
+            }
         initial_state=new_state; 
         i_player=new_i; 
         j_player=new_j;
@@ -264,8 +266,8 @@ void Q_player_server(void)
             }
         } 
  
-        // if((i_player==win_i && j_player==win_j))break;  // end of episode 
-    } while(!kbhit() || (i_player!=win_i && j_player!=win_j)); 
+        if((i_player==win_i && j_player==win_j))break;  // end of episode 
+    } while(!kbhit() ); 
     //episode++;  
     //gets(dummy);  
  //} while(episode<50);  //  aqui controlamos cuantos episodios queremos ejecutar para entrenar 

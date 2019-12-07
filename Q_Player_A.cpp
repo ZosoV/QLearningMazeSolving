@@ -5,37 +5,40 @@
 //  October 3, 2019
 //--------------------------//        GLOBALS   -------------------
 const int qSize = 21;
-int win_i = 20;
-int win_j = 20;
+
+//Posición del objetivo final //Configurar antes de entrenar
+int win_i = 12;
+int win_j = 12;
 int i_player = 0;
 int j_player = 0;
 const double gamma = 0.8;
 const double eps = 0.5;
 
-int maze[qSize][qSize] =
-        {   
-            //0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20
-            { 0,  0,  0,  0, -1,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0,  0},           // 0
-			{-1, -1, -1,  0, -1,  0,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1},           // 1
-			{ 0,  0, -1,  0, -1, -1,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0,  0},           // 2
-			{ 0, -1, -1,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0,  0, -1,  0, -1},           // 3
-			{ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0,  0, -1,  0,  0},           // 4
-            {-1, -1, -1, -1,  0,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1,  0,  0, -1, -1,  0},           // 5
-            { 0,  0,  0, -1,  0,  0, -1,  0,  0,  0,  0,  0, -1,  0, -1,  0,  0,  0,  0,  0,  0},           // 6
-            { 0, -1,  0, -1,  0, -1, -1,  0, -1, -1, -1,  0, -1,  0, -1,  0,  0,  0,  0,  0,  0},           // 7
-            { 0, -1,  0, -1,  0,  0, -1,  0, -1,  0, -1,  0, -1,  0, -1,  0, -1, -1, -1, -1, -1},           // 8
-            { 0, -1, -1, -1, -1,  0, -1,  0, -1,  0, -1,  0, -1,  0,  0,  0, -1,  0,  0,  0,  0},           // 9
-            { 0,  0,  0,  0, -1,  0, -1,  0, -1,  0, -1,  0, -1, -1, -1,  0, -1,  0, -1, -1,  0},           // 10
-            {-1, -1, -1,  0, -1,  0, -1,  0, -1,  0, -1,  0,  0,  0,  0,  0, -1,  0, -1, -1,  0},           // 11
-            { 0,  0,  0,  0, -1,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0, -1,  0,  0},           // 12
-            { 0, -1, -1, -1, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1},           // 13
-            { 0,  0,  0,  0,  0,  0, -1,  0, -1,  0,  0, -1,  0,  0,  0,  0, -1,  0,  0,  0,  0},           // 14
-            {-1, -1, -1, -1, -1, -1, -1,  0, -1,  0,  0, -1,  0,  0,  0,  0, -1, -1, -1, -1,  0},           // 15
-            { 0,  0,  0,  0,  0,  0,  0,  0, -1,  0,  0, -1,  0, -1,  0,  0,  0,  0,  0,  0,  0},           // 16
-            { 0, -1, -1, -1, -1, -1, -1, -1, -1,  0,  0, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1},           // 17
-            { 0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0, -1,  0, -1,  0, -1,  0,  0,  0,  0,  0},           // 18
-            { 0, -1,  0, -1,  0, -1, -1,  0, -1, -1,  0, -1,  0, -1,  0, -1,  0, -1, -1,  0,  0},           // 19
-            { 0, -1,  0,  0,  0, -1, -1,  0, -1, -1,  0,  0,  0, -1,  0,  0,  0, -1, -1,  0,  0},           // 20
+//Definimos el tamaño del laberinto
+int maze[qSize][qSize] = 
+        {    
+            //0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 
+            { 0,  0,  0,  0, -1,  0,  0, -1,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1},           // 0 
+            {-1, -1, -1,  0, -1,  0,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 1 
+            { 0,  0, -1,  0, -1, -1,  0, -1,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1},           // 2 
+            { 0, -1, -1,  0,  0,  0,  0, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 3 
+            { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1},           // 4 
+            {-1, -1, -1, -1,  0,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 5 
+            { 0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 6 
+            { 0, -1,  0, -1,  0, -1, -1,  0, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 7 
+            { 0, -1,  0, -1,  0,  0, -1,  0, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 8 
+            { 0, -1, -1, -1, -1,  0, -1,  0, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 9 
+            { 0,  0,  0,  0, -1,  0,  0,  0, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 10 
+            {-1, -1, -1,  0,  0,  0, -1,  0, -1,  0, -1,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1},           // 11 
+            { 0,  0,  0,  0, -1,  0, -1,  0,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1},           // 12 
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 13 
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 14 
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 15 
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 16 
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 17 
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 18 
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 19 
+            {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},           // 20 
         };
 //--
 
@@ -84,7 +87,7 @@ int learning_mode = 0; //1 para ejecutar sin graficas el entrenamiento
 
 char str[1000];
 int sig = 5;
-
+bool slow = 0;
 bool pause = false;
 
 void plot_labyrinth(int i_player, int j_player)                           ////       PLOT HIDDEN WEIGHTS
@@ -210,29 +213,35 @@ main()
 
     int prev_i, prev_j, i_p, j_p;
     bool first_k = false, second_k = false;
-            
-    //First stage define the maze and add new walls
-    plot_labyrinth(i_player,j_player);
-    make_graph();
+
+    draw_mode=3; //Inicio todo configurado sin poder añadir paredes, ni configurar el objetivo
+    if ( learning_mode == 0){
+        //First stage define the maze and add new walls
+        plot_labyrinth(i_player,j_player);
+        make_graph();
+    }       
+
 
     while(1){
      
        key=getch();
        switch (key) {
-           case '1':{ //Cambio de modo a elegir la posicion del objetivo
-                draw_mode=2;
-                plot_labyrinth(i_player,j_player);
-                make_graph();
+           //case '1':{ //Cambio de modo a elegir la posicion del objetivo
+           //     draw_mode=2;
+           //     if(learning_mode == 0){
+           //         plot_labyrinth(i_player,j_player);
+           //         make_graph();
+           //     }
+           //     delay(100);
+           //     } 
+           //break;
+           case '2':{ //Cargo Aprendizaje
+                load_learning();
                 delay(100);
-                } 
-           break;
-           case '2':{ //Cambio de modo a elegir la posicion de inicio
-                draw_mode=3;
-                plot_labyrinth(i_player,j_player);
-                make_graph();
+                cout << "Aprendizaje Cargado" << endl;
                 delay(100);
                     } 
-           break;
+           break; 
            case '3':{ //Inicio el entramiento
                 fill_Q_matrix();
                 Q_learn_server();
@@ -240,18 +249,18 @@ main()
                 delay(100);
                     } 
            break;
-           case '4':{ //Cargo Aprendizaje
-                load_learning();
-                delay(100);
-                cout << "hasta aqui bien" << endl;
-                fill_Q_matrix();
-                Q_learn_server();
-                cout << "End training in episode "<< episode << endl; 
+
+           case '4':{ //Guardo el aprendizaje
+                save_learning();
                 delay(100);
                     } 
            break;
-           case '5':{ //Guardo el aprendizaje
-                save_learning();
+           case '5':{ // Uso el entrenamiento. Cambio la posicion incial de agente //Aplastar dos veces el boton
+                draw_mode=3;
+                if(learning_mode == 0){
+                    plot_labyrinth(i_player,j_player);
+                    make_graph();
+                }
                 delay(100);
                     } 
            break;
@@ -259,9 +268,14 @@ main()
                 Q_player_server();
                 delay(100);
                 } 
-           break;           
+           break;
+
+           case '7':{ //Permite mover al agente con el aprendizaje de manera más lenta o rapida
+                  slow = (slow == 1) ? 0 : 1;
+                } 
+           break;                           
                     
-           case 'p':{ //Detiene el etrenamiento y continuo
+           case 'p':{ //Detiene el etrenamiento y continua con el siguiente click
                
                 key = getch();
                 
