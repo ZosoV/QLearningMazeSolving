@@ -18,7 +18,6 @@ Command  | Use
 ```2```  | Load the learning
 ```3```  | Train the agent
 ```4```  | Store the learning and stop the training
-```5```  | Set the initial position of the agent. (First stop the algorithm and the use this command)
-```6```  | The agent use the learning to find the target position
-```7```  | If you can see the moving of the agent slowly use it or fastly, stop and use it again.
-
+```5```  | Set the initial position of the agent. (First stop the algorithm and the use this command). Click two times.
+```6```  | The agent use the learning to find the target position. If you can pause the moving use ```6``` again.
+```7```  | First pause with ```6```, then click to do slowly or fastly (here you can also set a new initial position) , and run again ```6```.
